@@ -9,6 +9,7 @@ import signUp from "./components/signUp";
 import Home from "./components/Home";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
+import PatientDetails from "./components/PatientDetails";
 function App() {
   return (
     <Router>
@@ -17,12 +18,15 @@ function App() {
         <Route path="/signUp" exact strict component={signUp} />
         <Route path="/" exact strict component={Home} />
         <Route path="/ForgotPassword" exact strict component={ForgotPassword} />
+        <Route path="/PatientDetails" exact strict component={PatientDetails} />
+        {/* {<PatientDetails />} */}
         {/* <Route />
         <Route /> */}
         {/* <SignUp /> */}
         {/* <Doctor /> */}
         {/* <Login /> */}
         {/* <ForgotPassword /> */}
+
         <Route path="/ResetPassword" exact strict component={ResetPassword} />
       </div>
     </Router>

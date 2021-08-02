@@ -7,6 +7,9 @@ class Home extends Component {
         <button onClick={() => this.props.history.push("/login")}>
           Sign In/Sign Up
         </button>
+        <button onClick={() => this.props.history.push("/PatientDetails")}>
+          PatientDetails
+        </button>
       </div>
     );
   }

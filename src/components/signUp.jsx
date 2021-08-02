@@ -8,6 +8,7 @@ class signUp extends Component {
     Password: "",
     type: "",
     fullName: "",
+    AccountCreated: true,
   };
 
   signUp(e) {
@@ -24,15 +25,37 @@ class signUp extends Component {
         .then((result) => {
           console.log(result);
           if (result) {
-            this.setState({ getFullName: result.data.First });
+            this.setState({
+              getFullName: result.data.First,
+              AccountCreated: true,
+            });
           }
         })
         .catch((error) => this.setState({ error: error.message }));
     }
   }
   render() {
+    const { AccountCreated } = this.state;
     return (
+      //
       <div className="main">
+        {AccountCreated ? (
+          <div class="alert alert-success" role="alert">
+            <strong>Account Created Successfully!!</strong>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+              onClick={(e) => {
+                this.setState({ AccountCreated: false });
+              }}
+            ></button>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="box">
           <h5>Sign Up</h5>
           <form>
@@ -75,7 +98,8 @@ class signUp extends Component {
               />
               <label>Password</label>
             </div>
-            <div className="form-check container col-4 radio">
+            <h4>User Type</h4>
+            <div className="form-check form-check-inline container col-4 radio">
               <label className="txtColor">Doctor</label>
               <input
                 className="form-check-input"
@@ -88,7 +112,7 @@ class signUp extends Component {
                 }
               />
             </div>
-            <div className="form-check container col-4 radio">
+            <div className="form-check form-check-inline container col-4 radio">
               <label className="txtColor">Patient</label>
               <input
                 className="form-check-input "
