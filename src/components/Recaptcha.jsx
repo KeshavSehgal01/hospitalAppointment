@@ -2,7 +2,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import React, { useRef } from "react";
 import axios from "axios";
 // import styles from "./Captcha.css";
-import { siteKey } from "../apiKeys";
+import { secretKey, siteKey } from "../apiKeys";
 const { origin, protocol } = window.location;
 
 function Recaptcha(props) {
@@ -11,18 +11,23 @@ function Recaptcha(props) {
   function onChange(value) {
     try {
       console.log(value);
-      const url =
-        "https://www.google.com/recaptcha/api/siteverify?sitekey=${siteKey}&response=${value}";
+
+      const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${value}`;
       axios({
-        method: "post",
         url: `${url}`,
-        headers: { "content-type": "application/json" },
-        data: this.state,
+        method: "post",
+        // headers: {
+        //   Accept: "application/json",
+        //   "Content-Type": "application/json",
+        //   Origin: "*",
+        //   "Access-Control-Allow-Headers": "*",
+        //   "Access-Control-Allow-Origin": "*",
+        // },
       })
         .then((result) => {
-          console.log(result);
+          props.isVerified(result);
         })
-        .catch((error) => this.setState({ error: error.message }));
+        .catch((error) => {});
 
       const payload = value !== null ? true : false;
 

@@ -8,7 +8,7 @@ class signUp extends Component {
     Password: "",
     type: "",
     fullName: "",
-    AccountCreated: true,
+    AccountCreated: false,
   };
 
   signUp(e) {
@@ -26,7 +26,6 @@ class signUp extends Component {
           console.log(result);
           if (result) {
             this.setState({
-              getFullName: result.data.First,
               AccountCreated: true,
             });
           }

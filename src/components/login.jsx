@@ -15,58 +15,47 @@ class Login extends Component {
     userIncorrect: false,
     isVerified: false,
   };
-  handleLogin(e) {
-    const { isVerified } = this.state;
-    if (isVerified == true) {
-      e.preventDefault();
-      const { Email, Password } = this.state;
-      if (Email && Password) {
-        const url = "http://hospitalappointment/auth.php";
-        axios({
-          method: "post",
-          url: `${url}`,
-          headers: { "content-type": "application/json" },
-          data: this.state,
+
+  // componentDidMount() {
+  //   console.log(new Date().getTime());
+  //   setInterval(() => {
+  //     const expiresAt = JSON.parse(localStorage.getItem("ExpiresAt"));
+  //     if (expiresAt !== null) {
+  //       const expired =
+  //         new Date().getTime() >= parseInt(expiresAt) ? false : true;
+  //       if (expired) {
+  //         this.props.history.push("/");
+  //         localStorage.setItem("ExpiresAt", null);
+  //       }
+  //     }
+  //   }, 4000);
+  // }
+
+  login(e) {
+    e.preventDefault();
+    const { Email, Password } = this.state;
+    if (Email && Password) {
+      const url = "http://hospitalappointment/auth.php";
+      axios({
+        method: "post",
+        url: `${url}`,
+        headers: { "content-type": "application/json" },
+        data: this.state,
+      })
+        .then((result) => {
+          console.log(result);
+          if (result.data) {
+            this.setState({ loggedIn: true });
+            localStorage.setItem("ExpiresAt", result.data[0].ExpiresAt);
+          } else if (result.data === false) {
+            this.setState({ userIncorrect: true });
+          }
         })
-          .then((result) => {
-            console.log(result);
-            if (result.data) {
-              this.setState({ loggedIn: true });
-            } else if (result.data === false) {
-              this.setState({ userIncorrect: true });
-            }
-          })
-          .catch((error) => this.setState({ error: error.message }));
-      }
-    } else {
-      alert("Please verify that you are a human");
+        .catch((error) => this.setState({ error: error.message }));
     }
   }
-
-  // login(e) {
-  //   e.preventDefault();
-  //   const { Email, Password } = this.state;
-  //   if (Email && Password) {
-  //     const url = "http://hospitalappointment/auth.php";
-  //     axios({
-  //       method: "post",
-  //       url: `${url}`,
-  //       headers: { "content-type": "application/json" },
-  //       data: this.state,
-  //     })
-  //       .then((result) => {
-  //         console.log(result);
-  //         if (result.data) {
-  //           this.setState({ loggedIn: true });
-  //         } else if (result.data === false) {
-  //           this.setState({ userIncorrect: true });
-  //         }
-  //       })
-  //       .catch((error) => this.setState({ error: error.message }));
-  //   }
-  // }
   render() {
-    const { loggedIn, userIncorrect } = this.state;
+    const { loggedIn, userIncorrect, isVerified } = this.state;
     console.log(this.props);
     return (
       <div style={{ height: "inherit" }}>
@@ -116,17 +105,22 @@ class Login extends Component {
                     required
                   />
                   <label>Password</label>
-                </div>
+                </div>{" "}
+                <Recaptcha
+                  isVerified={(e) =>
+                    this.setState({ isVerified: e.data.success })
+                  }
+                />
                 <button
                   type="submit"
                   id="submitForm"
+                  disabled={!isVerified}
                   name="submit"
                   className="btn btn-primary"
-                  onClick={(e) => this.handleLogin(e)}
+                  onClick={(e) => this.login(e)}
                 >
                   Sign In
                 </button>
-                <Recaptcha />
               </form>
               <h6>
                 Don't have an account?{" "}
